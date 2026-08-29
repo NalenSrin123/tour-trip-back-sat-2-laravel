@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cancellations', function (Blueprint $table) {
             $table->id('cancellation_id');
-            $table->foreignID('cancel_request_id')->unique->constrained('cancel_requests','cancel_request_id');
+            $table->foreignId('cancel_request_id')->unique()->constrained('cancel_requests','cancel_request_id');
             $table->decimal('refund_amount',10,2);
             $table->string('refund_method');
             $table->string('status');

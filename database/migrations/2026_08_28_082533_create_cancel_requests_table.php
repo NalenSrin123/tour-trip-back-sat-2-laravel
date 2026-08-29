@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cancel_requests', function (Blueprint $table) {
             $table->id('cancel_request_id');
-            $table->foreignID('booking_id')->constrained('bookings','booking_id');
+            $table->foreignId('booking_id')->constrained('bookings','booking_id');
             $table->text('request_reason');
             $table->enum('status',['pending','approved','rejected'])->default('pending');
             $table->timestamp('requested_at')->useCurrent();
