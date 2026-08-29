@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('booking_reviews', function (Blueprint $table) {
             $table->id('booking_review_id');
-            $table->foreignId('booking_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('booking_id')
+                ->constrained('bookings', 'booking_id')
+                ->cascadeOnDelete();
             $table->tinyInteger('rating');
             $table->text('review_text')->nullable();
             $table->timestamps();

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BookingReview extends Model
 {
@@ -17,8 +18,8 @@ class BookingReview extends Model
 
     public $timestamps = true;
 
-    public function booking()
+    public function booking(): BelongsTo
     {
-        return $this->belongsTo(Booking::class, 'booking_id');
+        return $this->belongsTo(Booking::class, 'booking_id', 'booking_id');
     }
 }
