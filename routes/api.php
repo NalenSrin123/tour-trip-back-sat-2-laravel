@@ -5,3 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/tours', [TourController::class, 'index']);
 Route::post('/tours', [TourController::class, 'store']);
+Route::put('/tours/{id}', [TourController::class, 'update']);
+Route::delete('/tours/{id}', [TourController::class, 'destroy']);
