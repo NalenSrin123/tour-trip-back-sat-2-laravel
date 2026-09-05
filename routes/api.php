@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\DestinationController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DestinationController as WebDestinationController;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\UserController as ListUserController;
@@ -9,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Auth
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
