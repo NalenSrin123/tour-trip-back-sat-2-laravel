@@ -24,7 +24,7 @@ class TourController extends Controller
     }
 
     // API create new tour
-    public function tourstore(Request $request)
+    public function store(Request $request)
     {
         
         $request->validate([
