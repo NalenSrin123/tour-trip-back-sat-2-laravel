@@ -8,6 +8,7 @@ use App\Http\Controllers\TourController;
 use App\Http\Controllers\UserController as ListUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BookingController;
 
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
@@ -35,3 +36,7 @@ Route::prefix('users')->group(function () {
     Route::put('/{user}', [UserController::class, 'update']);
     Route::patch('/{user}', [UserController::class, 'update']);
 });
+
+// Bookings
+Route::get('/bookings', [BookingController::class, 'index']);
+Route::post('/bookings', [BookingController::class, 'store']);
