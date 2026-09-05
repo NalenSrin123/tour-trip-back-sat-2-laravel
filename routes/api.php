@@ -17,5 +17,15 @@ Route::post('/users', [UserController::class, 'store']);
 Route::apiResource('destinations', DestinationController::class)
     ->only(['update', 'destroy']);
 
+use App\Http\Controllers\Api\ReviewController;
+
 Route::get('/destinations', [ApiDestinationController::class, 'index']);
 Route::post('/destinations', [ApiDestinationController::class, 'store']);
+
+// Tour Reviews
+Route::get('/tours/{tour_id}/reviews', [ReviewController::class, 'index']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/tours/{tour_id}/reviews', [ReviewController::class, 'store']);
+});
+
