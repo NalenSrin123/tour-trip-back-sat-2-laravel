@@ -78,10 +78,14 @@ class BookingController extends Controller
      * 3. UPDATE BOOKING
      * PUT/PATCH /api/bookings/{booking_id}
      */
+
     public function update(Request $request, int $booking_id): JsonResponse
     {
         try {
-            $booking = DB::table('bookings')->where('booking_id', $booking_id)->first();
+            // Find booking
+            $booking = DB::table('bookings')
+                ->where('booking_id', $booking_id)
+                ->first();
 
             if (!$booking) {
                 return response()->json([
@@ -89,16 +93,23 @@ class BookingController extends Controller
                 ], Response::HTTP_NOT_FOUND);
             }
 
+            // Validate request
             $validated = $request->validate([
                 'user_id'      => 'sometimes|integer|exists:users,user_id',
-                'schedule'     => 'sometimes|integer|exists:tour_schedules,schedule_id',
-                'status'       => 'sometimes|string|in:pending,comfirmed,cancelled,complete',
+                'schedule_id'  => 'sometimes|integer|exists:tour_schedules,schedule_id',
+                'status'       => 'sometimes|string|in:pending,confirmed,cancelled,complete',
                 'total_amount' => 'sometimes|numeric|min:0',
             ]);
 
-            DB::table('bookings')->where('booking_id', $booking_id)->update($validated);
+            // Update booking
+            DB::table('bookings')
+                ->where('booking_id', $booking_id)
+                ->update($validated);
 
-            $updatedBooking = DB::table('bookings')->where('booking_id', $booking_id)->first();
+            // Get updated booking
+            $updatedBooking = DB::table('bookings')
+                ->where('booking_id', $booking_id)
+                ->first();
 
             return response()->json([
                 'message' => 'Booking updated successfully',
@@ -112,7 +123,9 @@ class BookingController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
 
         } catch (Throwable $e) {
-            Log::error('Booking update failed: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Booking update failed: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'message' => 'Failed to update booking',
@@ -120,7 +133,6 @@ class BookingController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
     /**
      * 4. Delete Booking
      * DELETE /api/bookings/{booking_id}
