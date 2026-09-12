@@ -10,6 +10,7 @@ use App\Http\Controllers\TourController;
 use App\Http\Controllers\UserController as ListUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CustomerController;
 
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
@@ -50,3 +51,5 @@ Route::post('/bookings', [BookingController::class, 'store']);
 Route::put('/bookings/{booking_id}', [BookingController::class, 'update']);
 Route::delete('/bookings/{booking_id}', [BookingController::class, 'destroy']);
 
+// Customers CRUD
+Route::apiResource('customers', CustomerController::class);
