@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TourScheduleController;
 // Auth
@@ -69,3 +70,6 @@ Route::delete('/tour-images/{id}', [ImageController::class, 'destroy']);
 
 // Tour Schedules
 Route::apiResource('tour-schedules', TourScheduleController::class);
+
+Route::resource('category', CategoryController::class)
+    ->only(['index', 'store', 'show', 'update', 'destroy']);
