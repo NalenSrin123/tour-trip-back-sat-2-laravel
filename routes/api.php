@@ -39,8 +39,8 @@ Route::post('/users', [UserController::class, 'store']);
 // Destinations
 Route::apiResource('destinations', DestinationController::class)
     ->only(['update', 'destroy']);
-Route::get('/destinations', [ApiDestinationController::class, 'index']);
-Route::post('/destinations', [ApiDestinationController::class, 'store']);
+Route::get('/destinations', [DestinationController::class, 'index']);
+Route::post('/destinations', [DestinationController::class, 'store']);
 // Destinations
 Route::get('/destinations', [DestinationController::class, 'index']);
 Route::post('/destinations', [DestinationController::class, 'store']);
