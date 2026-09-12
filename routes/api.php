@@ -1,17 +1,19 @@
 <?php
 
+use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\DestinationController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DestinationController as WebDestinationController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TourController;
+use App\Http\Controllers\TourScheduleController;
 use App\Http\Controllers\UserController as ListUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\BookingController;
-use App\Http\Controllers\Api\ReviewController;
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\TourScheduleController;
+
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -32,15 +34,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tours/{tour_id}/reviews', [ReviewController::class, 'store']);
 });
 
-// Users
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/users', [UserController::class, 'store']);
-
-// Destinations
-Route::apiResource('destinations', DestinationController::class)
-    ->only(['update', 'destroy']);
-Route::get('/destinations', [DestinationController::class, 'index']);
-Route::post('/destinations', [DestinationController::class, 'store']);
 // Destinations
 Route::get('/destinations', [DestinationController::class, 'index']);
 Route::post('/destinations', [DestinationController::class, 'store']);
@@ -60,7 +53,7 @@ Route::post('/bookings', [BookingController::class, 'store']);
 Route::put('/bookings/{booking_id}', [BookingController::class, 'update']);
 Route::delete('/bookings/{booking_id}', [BookingController::class, 'destroy']);
 
-
+// Tour Images
 Route::get('/tour-images', [ImageController::class, 'index']);
 Route::get('/tour-images/{id}', [ImageController::class, 'show']);
 Route::post('/tour-images', [ImageController::class, 'store']);
@@ -69,3 +62,7 @@ Route::delete('/tour-images/{id}', [ImageController::class, 'destroy']);
 
 // Tour Schedules
 Route::apiResource('tour-schedules', TourScheduleController::class);
+
+// Customers CRUD
+Route::apiResource('customers', CustomerController::class);
+

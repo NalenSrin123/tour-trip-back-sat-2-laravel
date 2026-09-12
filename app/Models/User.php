@@ -12,15 +12,10 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-<<<<<<< HEAD
     use HasApiTokens, HasFactory, Notifiable;
-=======
-    use HasFactory, Notifiable, HasApiTokens;
->>>>>>> api-edit-delete-booking
 
     protected $table = 'users';
 
-    protected $primaryKey = 'user_id';
 
     protected $fillable = [
         'name',
