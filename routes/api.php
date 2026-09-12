@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\ImageController;
-
+use App\Http\Controllers\TourScheduleController;
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -66,3 +66,6 @@ Route::get('/tour-images/{id}', [ImageController::class, 'show']);
 Route::post('/tour-images', [ImageController::class, 'store']);
 Route::put('/tour-images/{id}', [ImageController::class, 'update']);
 Route::delete('/tour-images/{id}', [ImageController::class, 'destroy']);
+
+// Tour Schedules
+Route::apiResource('tour-schedules', TourScheduleController::class);
