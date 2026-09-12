@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\ImageController;
 
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
@@ -59,3 +60,9 @@ Route::post('/bookings', [BookingController::class, 'store']);
 Route::put('/bookings/{booking_id}', [BookingController::class, 'update']);
 Route::delete('/bookings/{booking_id}', [BookingController::class, 'destroy']);
 
+
+Route::get('/tour-images', [ImageController::class, 'index']);
+Route::get('/tour-images/{id}', [ImageController::class, 'show']);
+Route::post('/tour-images', [ImageController::class, 'store']);
+Route::put('/tour-images/{id}', [ImageController::class, 'update']);
+Route::delete('/tour-images/{id}', [ImageController::class, 'destroy']);
