@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('tours', function (Blueprint $table) {
             $table->id('tour_id');
-            $table->string('name');
+            $table->foreignId('category_id')->nullable()->constrained('categories', 'category_id')->nullOnDelete();
+            $table->foreignId('destination_id')->nullable()->constrained('destinations', 'destination_id')->nullOnDelete();
+            $table->string('title');
             $table->text('description')->nullable();
+            $table->decimal('price', 10, 2)->default(0);
+            $table->integer('duration_days')->default(1);
+            $table->integer('max_participants')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
+
     }
 
     /**
