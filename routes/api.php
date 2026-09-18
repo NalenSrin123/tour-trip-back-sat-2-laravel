@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\Api\DestinationController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\UserProfileController;
 
 Route::get('/tours', [TourController::class, 'index']);
 Route::post('/tours', [TourController::class, 'store']);
@@ -24,3 +25,6 @@ Route::get('/tour-images/{id}', [ImageController::class, 'show']);
 Route::post('/tour-images', [ImageController::class, 'store']);
 Route::put('/tour-images/{id}', [ImageController::class, 'update']);
 Route::delete('/tour-images/{id}', [ImageController::class, 'destroy']);
+
+Route::get('/user-profiles', [UserProfileController::class, 'index']);
+Route::put('/user-profiles/{user_id}', [UserProfileController::class, 'update']);
