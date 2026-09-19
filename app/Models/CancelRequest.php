@@ -2,22 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class User extends Authenticatable
+class CancelRequest extends Model
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * 
-     */
+    protected $table = 'cancel_requests';
+    protected $primaryKey = 'cancel_request_id';
+
     protected $fillable = [
         'booking_id',
         'request_reason',
@@ -27,23 +23,11 @@ class User extends Authenticatable
         'admin_note',
     ];
 
-
     protected $casts = [
         'requested_at' => 'datetime',
         'responded_at' => 'datetime',
     ];
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * 
-     */
-   
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * 
-     */
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class, 'booking_id', 'booking_id');
@@ -53,5 +37,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Cancellation::class, 'cancel_request_id', 'cancel_request_id');
     }
-    
 }
