@@ -12,7 +12,7 @@ Route::middleware('auth:api')->prefix('auth')->group(function (): void {
 	Route::post('logout', [AuthController::class, 'logout']);
 	Route::post('refresh', [AuthController::class, 'refresh']);
 });
-
+//system-setting
 Route::middleware('auth:api')->group(function (): void {
 	Route::get('settings', [SystemSettingController::class, 'index']);
 	Route::post('settings', [SystemSettingController::class, 'store']);
