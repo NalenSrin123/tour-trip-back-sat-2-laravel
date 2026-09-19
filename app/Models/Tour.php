@@ -12,7 +12,23 @@ class Tour extends Model
 
     protected $primaryKey = 'tour_id';
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = [
+        'title',
+        'description',
+        'price',
+        'duration_days',
+        'max_participants',
+        'status',
+        'category_id',
+        'destination_id',
+    ];
+
+    protected $attributes = [
+        'price' => 0,
+        'duration_days' => 1,
+        'status' => 'active',
+    ];
+
 
     public function schedules(): HasMany
     {
