@@ -16,11 +16,7 @@ return new class extends Migration
             $table->enum('review_type', ['tour', 'booking']);
             $table->unsignedBigInteger('review_id');
             $table->enum('status', ['pending', 'approved', 'hidden'])->default('pending');
-            $table->unsignedBigInteger('actioned_by')->nullable();
-            $table->foreign('actioned_by')
-                ->references('user_id')
-                ->on('users')
-                ->nullOnDelete();
+            $table->foreignId('actioned_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('actioned_at')->nullable();
             $table->text('note')->nullable();
 

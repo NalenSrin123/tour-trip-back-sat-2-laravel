@@ -29,7 +29,6 @@ class Tour extends Model
         'status' => 'active',
     ];
 
-
     public function schedules(): HasMany
     {
         return $this->hasMany(TourSchedule::class, 'tour_id', 'tour_id');
