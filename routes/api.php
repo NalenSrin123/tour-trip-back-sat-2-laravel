@@ -10,6 +10,7 @@ use App\Http\Controllers\DestinationController as WebDestinationController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\TourScheduleController;
+use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\UserController as ListUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,11 +19,6 @@ use App\Http\Controllers\CategoryController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-// Tours
 Route::get('/tours', [TourController::class, 'index']);
 Route::post('/tours', [TourController::class, 'store']);
 Route::put('/tours/{id}', [TourController::class, 'update']);
@@ -68,3 +64,11 @@ Route::apiResource('customers', CustomerController::class);
 
 Route::resource('category', CategoryController::class)
     ->only(['index', 'store', 'show', 'update', 'destroy']);
+
+Route::middleware('auth:api')->group(function (): void {
+    Route::get('/settings', [SystemSettingController::class, 'index']);
+    Route::post('/settings', [SystemSettingController::class, 'store']);
+    Route::get('/settings/{setting}', [SystemSettingController::class, 'show']);
+    Route::match(['put', 'patch'], '/settings/{setting}', [SystemSettingController::class, 'update']);
+    Route::delete('/settings/{setting}', [SystemSettingController::class, 'destroy']);
+});

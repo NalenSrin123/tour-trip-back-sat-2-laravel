@@ -59,18 +59,20 @@ class BookingController extends Controller
 
             $booking->load('user');
 
-            return response()->json([
-                'message' => 'Booking created successfully',
-                'data'    => new BookingResource($booking),
-            ], Response::HTTP_CREATED);
+            return $this->successResponse(
+                new BookingResource($booking),
+                'Booking created successfully',
+                Response::HTTP_CREATED
+            );
 
         } catch (Throwable $e) {
             Log::error('Booking store failed: ' . $e->getMessage(), ['exception' => $e]);
 
-            return response()->json([
-                'message' => 'Failed to create booking',
-                'error'   => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse(
+                'Failed to create booking',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                $e->getMessage()
+            );
         }
     }
 
@@ -78,7 +80,6 @@ class BookingController extends Controller
      * 3. UPDATE BOOKING
      * PUT/PATCH /api/bookings/{booking_id}
      */
-
     public function update(Request $request, int $booking_id): JsonResponse
     {
         try {
@@ -88,9 +89,7 @@ class BookingController extends Controller
                 ->first();
 
             if (!$booking) {
-                return response()->json([
-                    'message' => 'Booking not found',
-                ], Response::HTTP_NOT_FOUND);
+                return $this->errorResponse('Booking not found', Response::HTTP_NOT_FOUND);
             }
 
             // Validate request
@@ -111,28 +110,31 @@ class BookingController extends Controller
                 ->where('booking_id', $booking_id)
                 ->first();
 
-            return response()->json([
-                'message' => 'Booking updated successfully',
-                'data'    => $updatedBooking,
-            ], Response::HTTP_OK);
+            return $this->successResponse(
+                $updatedBooking,
+                'Booking updated successfully'
+            );
 
         } catch (ValidationException $e) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors'  => $e->errors(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->errorResponse(
+                'Validation failed',
+                Response::HTTP_UNPROCESSABLE_ENTITY,
+                $e->errors()
+            );
 
         } catch (Throwable $e) {
             Log::error('Booking update failed: ' . $e->getMessage(), [
                 'exception' => $e
             ]);
 
-            return response()->json([
-                'message' => 'Failed to update booking',
-                'error'   => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse(
+                'Failed to update booking',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                $e->getMessage()
+            );
         }
     }
+
     /**
      * 4. Delete Booking
      * DELETE /api/bookings/{booking_id}
@@ -143,24 +145,24 @@ class BookingController extends Controller
             $booking = DB::table('bookings')->where('booking_id', $booking_id)->first();
 
             if (!$booking) {
-                return response()->json([
-                    'message' => 'Booking not found',
-                ], Response::HTTP_NOT_FOUND);
+                return $this->errorResponse('Booking not found', Response::HTTP_NOT_FOUND);
             }
 
             DB::table('bookings')->where('booking_id', $booking_id)->delete();
 
-            return response()->json([
-                'message' => 'Booking deleted successfully',
-            ], Response::HTTP_OK);
+            return $this->successResponse(
+                null,
+                'Booking deleted successfully'
+            );
 
         } catch (Throwable $e) {
             Log::error('Booking destroy failed: ' . $e->getMessage(), ['exception' => $e]);
 
-            return response()->json([
-                'message' => 'Failed to delete booking',
-                'error'   => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->errorResponse(
+                'Failed to delete booking',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+                $e->getMessage()
+            );
         }
     }
 }
