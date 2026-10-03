@@ -14,19 +14,22 @@ class AuthController extends Controller
     public function register(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'full_name'  => 'required|string|max:255',
-            'email'      => 'required|email|unique:users,email',
-            'password'   => 'required|string|min:6|confirmed',
-            'phone'      => 'nullable|string',
+            'name'                  => 'nullable|string|max:255',
+            'full_name'             => 'nullable|string|max:255',
+            'email'                 => 'required|email|max:255|unique:users,email',
+            'password'              => 'required|string|min:6|confirmed',
+            'phone'                 => 'nullable|string',
         ]);
+
+        $name = $data['full_name'] ?? $data['name'] ?? 'User';
 
         try {
             $hashedPassword = Hash::make($data['password']);
 
             $userId = DB::table('users')->insertGetId([
                 'role'          => 'customer',
-                'name'          => $data['full_name'],
-                'full_name'     => $data['full_name'],
+                'name'          => $name,
+                'full_name'     => $name,
                 'email'         => $data['email'],
                 'password'      => $hashedPassword,
                 'password_hash' => $hashedPassword,
@@ -77,7 +80,18 @@ class AuthController extends Controller
 
             $user->user_id = $user->id;
             $authUser = User::find($user->id);
-            $token = $authUser->createToken('api-token')->plainTextToken;
+
+            // Generate token (JWT if installed, otherwise Sanctum)
+            $token = null;
+            if (class_exists('Tymon\JWTAuth\Facades\JWTAuth')) {
+                try {
+                    $token = \Tymon\JWTAuth\Facades\JWTAuth::fromUser($authUser);
+                } catch (Throwable $e) {
+                    $token = $authUser->createToken('api-token')->plainTextToken;
+                }
+            } else {
+                $token = $authUser->createToken('api-token')->plainTextToken;
+            }
 
             return $this->successResponse(
                 [
@@ -87,9 +101,11 @@ class AuthController extends Controller
                 'Login Successful',
                 200,
                 [
-                    'token'   => $token,
-                    'User'    => $user,
-                    'Message' => 'Login Successful',
+                    'token'        => $token,
+                    'access_token' => $token,
+                    'token_type'   => 'bearer',
+                    'User'         => $user,
+                    'Message'      => 'Login Successful',
                 ]
             );
         } catch (Throwable $th) {
@@ -99,5 +115,43 @@ class AuthController extends Controller
                 $th->getMessage()
             );
         }
+    }
+
+    public function me(): JsonResponse
+    {
+        $user = auth('api')->user() ?? auth()->user();
+        return $this->successResponse($user, 'User profile retrieved successfully');
+    }
+
+    public function logout(): JsonResponse
+    {
+        if (class_exists('Tymon\JWTAuth\Facades\JWTAuth')) {
+            try {
+                if ($jwt = \Tymon\JWTAuth\Facades\JWTAuth::getToken()) {
+                    \Tymon\JWTAuth\Facades\JWTAuth::invalidate($jwt);
+                }
+            } catch (Throwable $e) {
+                // ignore
+            }
+        }
+
+        return $this->successResponse(null, 'Successfully logged out.');
+    }
+
+    public function refresh(): JsonResponse
+    {
+        if (class_exists('Tymon\JWTAuth\Facades\JWTAuth')) {
+            try {
+                $newToken = \Tymon\JWTAuth\Facades\JWTAuth::refresh();
+                return $this->successResponse([
+                    'access_token' => $newToken,
+                    'token_type'   => 'bearer',
+                ], 'Token refreshed successfully');
+            } catch (Throwable $e) {
+                return $this->errorResponse('Token refresh failed', 401, $e->getMessage());
+            }
+        }
+
+        return $this->errorResponse('JWT not supported', 400);
     }
 }

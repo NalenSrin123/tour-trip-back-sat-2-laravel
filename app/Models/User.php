@@ -16,7 +16,6 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-
     protected $fillable = [
         'name',
         'full_name',
@@ -68,5 +67,15 @@ class User extends Authenticatable
     public function getUserIdAttribute()
     {
         return $this->attributes['id'] ?? null;
+    }
+
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
     }
 }
