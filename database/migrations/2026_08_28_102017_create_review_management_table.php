@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'approved', 'hidden'])->default('pending');
             $table->unsignedBigInteger('actioned_by')->nullable();
             $table->foreign('actioned_by')
-                ->references('user_id')
+                ->references('id')
                 ->on('users')
                 ->nullOnDelete();
             $table->timestamp('actioned_at')->nullable();

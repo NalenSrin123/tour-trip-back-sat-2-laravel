@@ -8,7 +8,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -23,10 +23,11 @@ class UserController extends Controller
         // so Laravel will automatically hash the password when assigned.
         $user = User::create($validated);
 
-        return response()->json([
-            'message' => 'User created successfully',
-            'data'    => new UserResource($user),
-        ], Response::HTTP_CREATED);
+        return $this->successResponse(
+            new UserResource($user),
+            'User created successfully',
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -43,9 +44,9 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return response()->json([
-            'message' => 'User updated successfully',
-            'data'    => new UserResource($user),
-        ], Response::HTTP_OK);
+        return $this->successResponse(
+            new UserResource($user),
+            'User updated successfully'
+        );
     }
 }

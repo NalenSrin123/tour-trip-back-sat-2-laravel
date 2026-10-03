@@ -3,31 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tour_Image;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ImageController extends Controller
 {
     // 1. GET ALL (Read All)
-    public function index()
+    public function index(): JsonResponse
     {
         $images = Tour_Image::all();
-        return response()->json($images, 200);
+        return $this->successResponse($images, 'Images retrieved successfully');
     }
 
     // 2. GET ONE (Read One)
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $image = Tour_Image::find($id);
 
         if (!$image) {
-            return response()->json(['message' => 'Image not found'], 404);
+            return $this->errorResponse('Image not found', 404);
         }
 
-        return response()->json($image, 200);
+        return $this->successResponse($image, 'Image retrieved successfully');
     }
 
     // 3. CREATE (Store New Image URL)
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'tour_id'   => 'required',
@@ -39,34 +40,34 @@ class ImageController extends Controller
             'image_url' => $request->image_url,
         ]);
 
-        return response()->json($image, 201);
+        return $this->successResponse($image, 'Image created successfully', 201);
     }
 
     // 4. UPDATE (Edit Image URL)
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $image = Tour_Image::find($id);
 
         if (!$image) {
-            return response()->json(['message' => 'Image not found'], 404);
+            return $this->errorResponse('Image not found', 404);
         }
 
         $image->update($request->all());
 
-        return response()->json($image, 200);
+        return $this->successResponse($image, 'Image updated successfully');
     }
 
     // 5. DELETE (Delete Record)
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $image = Tour_Image::find($id);
 
         if (!$image) {
-            return response()->json(['message' => 'Image not found'], 404);
+            return $this->errorResponse('Image not found', 404);
         }
 
         $image->delete();
 
-        return response()->json(['message' => 'Deleted successfully'], 200);
+        return $this->successResponse(null, 'Deleted successfully');
     }
 }

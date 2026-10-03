@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Destination;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DestinationController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $query = Destination::query();
 
@@ -23,13 +24,10 @@ class DestinationController extends Controller
 
         $destinations = $query->get();
 
-        return response()->json([
-            'success' => true,
-            'data' => $destinations
-        ]);
+        return $this->successResponse($destinations, 'Destinations retrieved successfully');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -39,10 +37,6 @@ class DestinationController extends Controller
 
         $destination = Destination::create($request->all());
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Destination created successfully',
-            'data' => $destination
-        ], 201);
+        return $this->successResponse($destination, 'Destination created successfully', 201);
     }
 }

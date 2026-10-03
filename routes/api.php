@@ -13,7 +13,7 @@ use App\Http\Controllers\TourScheduleController;
 use App\Http\Controllers\UserController as ListUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\CategoryController;
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -66,3 +66,5 @@ Route::apiResource('tour-schedules', TourScheduleController::class);
 // Customers CRUD
 Route::apiResource('customers', CustomerController::class);
 
+Route::resource('category', CategoryController::class)
+    ->only(['index', 'store', 'show', 'update', 'destroy']);
