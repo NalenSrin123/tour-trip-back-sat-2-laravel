@@ -18,18 +18,19 @@ class DestinationController extends Controller
 
         $destination->update($validated);
 
-        return response()->json([
-            'message' => 'Destination updated successfully.',
-            'data' => $destination->fresh(),
-        ]);
+        return $this->successResponse(
+            $destination->fresh(),
+            'Destination updated successfully.'
+        );
     }
 
     public function destroy(Destination $destination): JsonResponse
     {
         $destination->delete();
 
-        return response()->json([
-            'message' => 'Destination deleted successfully.',
-        ]);
+        return $this->successResponse(
+            null,
+            'Destination deleted successfully.'
+        );
     }
 }

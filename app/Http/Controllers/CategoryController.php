@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
     // Display all categories
-    public function index()
+    public function index(): JsonResponse
     {
         $categories = DB::table('categories')
             ->orderBy('category_id', 'desc')
             ->get();
 
-        return response()->json([
-            'success' => true,
-            'data' => $categories,
-        ]);
+        return $this->successResponse($categories, 'Categories retrieved successfully');
     }
 
     // Store new category
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -37,45 +35,32 @@ class CategoryController extends Controller
 
         $category = DB::table('categories')->where('category_id', $id)->first();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category created successfully.',
-            'data' => $category,
-        ], 201);
+        return $this->successResponse($category, 'Category created successfully.', 201);
     }
 
     // Show one category
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $category = DB::table('categories')
             ->where('category_id', $id)
             ->first();
 
         if (!$category) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Category not found.',
-            ], 404);
+            return $this->errorResponse('Category not found.', 404);
         }
 
-        return response()->json([
-            'success' => true,
-            'data' => $category,
-        ]);
+        return $this->successResponse($category, 'Category retrieved successfully');
     }
 
     // Update category
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $category = DB::table('categories')
             ->where('category_id', $id)
             ->first();
 
         if (!$category) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Category not found.',
-            ], 404);
+            return $this->errorResponse('Category not found.', 404);
         }
 
         $validated = $request->validate([
@@ -93,34 +78,24 @@ class CategoryController extends Controller
 
         $updated = DB::table('categories')->where('category_id', $id)->first();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category updated successfully.',
-            'data' => $updated,
-        ]);
+        return $this->successResponse($updated, 'Category updated successfully.');
     }
 
     // Delete category
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $category = DB::table('categories')
             ->where('category_id', $id)
             ->first();
 
         if (!$category) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Category not found.',
-            ], 404);
+            return $this->errorResponse('Category not found.', 404);
         }
 
         DB::table('categories')
             ->where('category_id', $id)
             ->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Category deleted successfully.',
-        ]);
+        return $this->successResponse(null, 'Category deleted successfully.');
     }
 }

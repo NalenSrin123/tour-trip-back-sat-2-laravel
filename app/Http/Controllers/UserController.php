@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -11,7 +12,7 @@ class UserController extends Controller
     /**
      * Display a listing of users with optional role filtering and search.
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $query = User::query();
 
@@ -31,16 +32,15 @@ class UserController extends Controller
 
         $users = $query->get();
 
-        return response()->json([
+        return $this->successResponse($users, 'Users retrieved successfully', 200, [
             'status' => 'success',
-            'data'   => $users
-        ], 200);
+        ]);
     }
 
     /**
      * Store a newly created user in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
@@ -53,10 +53,8 @@ class UserController extends Controller
 
         $user = User::create($validated);
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'User created successfully!',
-            'data'    => $user
-        ], 201);
+        return $this->successResponse($user, 'User created successfully!', 201, [
+            'status' => 'success',
+        ]);
     }
 }

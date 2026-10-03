@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tour;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class TourController extends Controller
 {
     // API for fetching and searching tours
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $query = Tour::query();
 
@@ -22,11 +23,11 @@ class TourController extends Controller
         // Show 10 items for a page
         $tours = $query->paginate(10);
 
-        return response()->json($tours, 200);
+        return $this->successResponse($tours, 'Tours retrieved successfully');
     }
 
     // API create new tour
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'title'            => 'required_without:name|string|max:255',
@@ -53,16 +54,16 @@ class TourController extends Controller
             'destination_id'   => $validated['destination_id'] ?? null,
         ]);
 
-        return response()->json($tour, 201);
+        return $this->successResponse($tour, 'Tour created successfully', 201);
     }
 
     // API update tour
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $tour = Tour::find($id);
 
         if (!$tour) {
-            return response()->json(['message' => 'Tour not found'], 404);
+            return $this->errorResponse('Tour not found', 404);
         }
 
         $validated = $request->validate([
@@ -84,20 +85,20 @@ class TourController extends Controller
 
         $tour->update($validated);
 
-        return response()->json($tour, 200);
+        return $this->successResponse($tour, 'Tour updated successfully');
     }
 
     // API delete tour
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $tour = Tour::find($id);
 
         if (!$tour) {
-            return response()->json(['message' => 'Tour not found'], 404);
+            return $this->errorResponse('Tour not found', 404);
         }
 
         $tour->delete();
 
-        return response()->json(['message' => 'Tour deleted successfully'], 200);
+        return $this->successResponse(null, 'Tour deleted successfully');
     }
 }

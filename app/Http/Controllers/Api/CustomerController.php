@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class CustomerController extends Controller
 {
@@ -47,10 +47,8 @@ class CustomerController extends Controller
         // 4. DYNAMIC PAGINATION (Safety limit between 1 and 100)
         $perPage = min(max((int) $request->input('per_page', 10), 1), 100);
         $customers = $query->paginate($perPage);
-        return response()->json([
-            'success' => true,
-            'data'    => $customers,
-        ], Response::HTTP_OK);
+
+        return $this->successResponse($customers, 'Customers retrieved successfully');
     }
 
     /**
@@ -68,11 +66,11 @@ class CustomerController extends Controller
 
         $customer = Customer::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Customer created successfully',
-            'data'    => $customer,
-        ], Response::HTTP_CREATED);
+        return $this->successResponse(
+            $customer,
+            'Customer created successfully',
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -81,10 +79,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer): JsonResponse
     {
-        return response()->json([
-            'success' => true,
-            'data'    => $customer,
-        ], Response::HTTP_OK);
+        return $this->successResponse($customer, 'Customer retrieved successfully');
     }
 
     /**
@@ -102,11 +97,7 @@ class CustomerController extends Controller
 
         $customer->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Customer updated successfully',
-            'data'    => $customer,
-        ], Response::HTTP_OK);
+        return $this->successResponse($customer, 'Customer updated successfully');
     }
 
     /**
@@ -117,9 +108,6 @@ class CustomerController extends Controller
     {
         $customer->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Customer deleted successfully',
-        ], Response::HTTP_OK);
+        return $this->successResponse(null, 'Customer deleted successfully');
     }
 }

@@ -5,23 +5,21 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Review;
 use App\Models\ReviewManagement;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
     // List all reviews for a specific tour
-    public function index($tour_id)
+    public function index($tour_id): JsonResponse
     {
         $reviews = Review::with('user:id,name')->where('tour_id', $tour_id)->get();
 
-        return response()->json([
-            'success' => true,
-            'data' => $reviews
-        ]);
+        return $this->successResponse($reviews, 'Reviews retrieved successfully');
     }
 
     // Create a new tour review
-    public function store(Request $request, $tour_id)
+    public function store(Request $request, $tour_id): JsonResponse
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
@@ -42,10 +40,10 @@ class ReviewController extends Controller
             'status' => 'pending'
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Review created and pending approval',
-            'data' => $review
-        ], 201);
+        return $this->successResponse(
+            $review,
+            'Review created and pending approval',
+            201
+        );
     }
 }
