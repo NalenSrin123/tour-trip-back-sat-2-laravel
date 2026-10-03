@@ -14,7 +14,10 @@ class TourScheduleController extends Controller
     public function index()
     {
         $schedules = TourSchedule::with('tour')->get();
-        return response()->json($schedules);
+        return response()->json([
+            'success' => true,
+            'data' => $schedules,
+        ]);
     }
 
     /**
@@ -50,6 +53,8 @@ class TourScheduleController extends Controller
     public function destroy(TourSchedule $tourSchedule)
     {
         $tourSchedule->delete();
-        return response()->json(null, 204);
+        return response()->json([
+            'message' => 'Tour schedule deleted successfully',
+        ], 200);
     }
 }
